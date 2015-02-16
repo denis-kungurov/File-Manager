@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DeCom::ActionHandlers">
+    <Position X="2.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAIAAAAAAAAAAAAAAAAAAAAAIAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Classes.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeCom::RenderActions">
+    <Position X="5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Classes.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeCom::SupportFunctions">
+    <Position X="7.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
