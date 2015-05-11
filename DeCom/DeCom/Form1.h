@@ -9,11 +9,14 @@ namespace DeCom {
     using namespace System;
     using namespace System::ComponentModel;
     using namespace System::Collections;
+	using namespace System::Collections::Generic;
     using namespace System::Windows::Forms;
     using namespace System::Data;
     using namespace System::Drawing;
     using namespace System::IO;
+	using namespace System::IO::Compression;
     using namespace System::Threading;
+	using namespace Ionic;
     using namespace std;
 	using namespace MyLibrary;
 
@@ -50,8 +53,8 @@ namespace DeCom {
     private: System::Windows::Forms::ColumnHeader^  columnHeader6;
 
 
-    private: System::Windows::Forms::ContextMenuStrip^  contextMenuStrip1;
-    private: System::Windows::Forms::ToolStripMenuItem^  helloToolStripMenuItem;
+
+
     private: System::Windows::Forms::Button^  button_Copy;
     private: System::Windows::Forms::Button^  button_Replace;
 
@@ -63,6 +66,16 @@ namespace DeCom {
 	private: System::Windows::Forms::ToolStripMenuItem^  optionsToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  pluginsToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  launchToolStripMenuItem;
+	private: System::Windows::Forms::ContextMenuStrip^  contextMenuStrip1;
+	private: System::Windows::Forms::ToolStripMenuItem^  updateToolStripMenuItem;
+	private: System::Windows::Forms::ContextMenuStrip^  contextMenuStrip2;
+	private: System::Windows::Forms::ToolStripMenuItem^  updateToolStripMenuItem1;
+
+
+
+
+
+
 
     private: System::ComponentModel::IContainer^  components;
 
@@ -88,8 +101,6 @@ namespace DeCom {
 			this->columnHeader3 = (gcnew System::Windows::Forms::ColumnHeader());
 			this->columnHeader4 = (gcnew System::Windows::Forms::ColumnHeader());
 			this->columnHeader6 = (gcnew System::Windows::Forms::ColumnHeader());
-			this->contextMenuStrip1 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
-			this->helloToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->button_Copy = (gcnew System::Windows::Forms::Button());
 			this->button_Replace = (gcnew System::Windows::Forms::Button());
 			this->splitContainer1 = (gcnew System::Windows::Forms::SplitContainer());
@@ -100,7 +111,10 @@ namespace DeCom {
 			this->optionsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->pluginsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->launchToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->contextMenuStrip1->SuspendLayout();
+			this->contextMenuStrip1 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
+			this->updateToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->contextMenuStrip2 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
+			this->updateToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainer1))->BeginInit();
 			this->splitContainer1->Panel1->SuspendLayout();
 			this->splitContainer1->Panel2->SuspendLayout();
@@ -110,6 +124,8 @@ namespace DeCom {
 			this->splitContainer2->Panel2->SuspendLayout();
 			this->splitContainer2->SuspendLayout();
 			this->menuStrip1->SuspendLayout();
+			this->contextMenuStrip1->SuspendLayout();
+			this->contextMenuStrip2->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// textBox1
@@ -175,6 +191,7 @@ namespace DeCom {
 			this->MyList1->View = System::Windows::Forms::View::Details;
 			this->MyList1->Enter += gcnew System::EventHandler(this, &Form1::MyList1_Enter);
 			this->MyList1->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &Form1::Global_KeyDown);
+			this->MyList1->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::MyList1_MouseClick);
 			this->MyList1->MouseDoubleClick += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::MyList1_MouseDoubleClick);
 			// 
 			// columnHeader1
@@ -199,7 +216,6 @@ namespace DeCom {
 				this->columnHeader3, this->columnHeader4,
 					this->columnHeader6
 			});
-			this->MyList2->ContextMenuStrip = this->contextMenuStrip1;
 			this->MyList2->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->MyList2->FullRowSelect = true;
 			this->MyList2->Location = System::Drawing::Point(0, 0);
@@ -210,6 +226,7 @@ namespace DeCom {
 			this->MyList2->View = System::Windows::Forms::View::Details;
 			this->MyList2->Enter += gcnew System::EventHandler(this, &Form1::MyList2_Enter);
 			this->MyList2->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &Form1::Global_KeyDown);
+			this->MyList2->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::MyList2_MouseClick);
 			this->MyList2->MouseDoubleClick += gcnew System::Windows::Forms::MouseEventHandler(this, &Form1::MyList2_MouseDoubleClick);
 			// 
 			// columnHeader3
@@ -226,18 +243,6 @@ namespace DeCom {
 			// 
 			this->columnHeader6->Text = L"Дата создания";
 			this->columnHeader6->Width = 150;
-			// 
-			// contextMenuStrip1
-			// 
-			this->contextMenuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->helloToolStripMenuItem });
-			this->contextMenuStrip1->Name = L"contextMenuStrip1";
-			this->contextMenuStrip1->Size = System::Drawing::Size(103, 26);
-			// 
-			// helloToolStripMenuItem
-			// 
-			this->helloToolStripMenuItem->Name = L"helloToolStripMenuItem";
-			this->helloToolStripMenuItem->Size = System::Drawing::Size(102, 22);
-			this->helloToolStripMenuItem->Text = L"Hello";
 			// 
 			// button_Copy
 			// 
@@ -340,15 +345,41 @@ namespace DeCom {
 			// 
 			this->pluginsToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->launchToolStripMenuItem });
 			this->pluginsToolStripMenuItem->Name = L"pluginsToolStripMenuItem";
-			this->pluginsToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->pluginsToolStripMenuItem->Size = System::Drawing::Size(113, 22);
 			this->pluginsToolStripMenuItem->Text = L"Plugins";
 			// 
 			// launchToolStripMenuItem
 			// 
 			this->launchToolStripMenuItem->Name = L"launchToolStripMenuItem";
-			this->launchToolStripMenuItem->Size = System::Drawing::Size(152, 22);
-			this->launchToolStripMenuItem->Text = L"Launch";
-			this->launchToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::launchToolStripMenuItem_Click);
+			this->launchToolStripMenuItem->Size = System::Drawing::Size(114, 22);
+			this->launchToolStripMenuItem->Text = L"Archive";
+			this->launchToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::archiveToolStripMenuItem_Click);
+			// 
+			// contextMenuStrip1
+			// 
+			this->contextMenuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->updateToolStripMenuItem });
+			this->contextMenuStrip1->Name = L"contextMenuStrip1";
+			this->contextMenuStrip1->Size = System::Drawing::Size(113, 26);
+			// 
+			// updateToolStripMenuItem
+			// 
+			this->updateToolStripMenuItem->Name = L"updateToolStripMenuItem";
+			this->updateToolStripMenuItem->Size = System::Drawing::Size(112, 22);
+			this->updateToolStripMenuItem->Text = L"Update";
+			this->updateToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::updateToolStripMenuItemRight_Click);
+			// 
+			// contextMenuStrip2
+			// 
+			this->contextMenuStrip2->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->updateToolStripMenuItem1 });
+			this->contextMenuStrip2->Name = L"contextMenuStrip2";
+			this->contextMenuStrip2->Size = System::Drawing::Size(113, 26);
+			// 
+			// updateToolStripMenuItem1
+			// 
+			this->updateToolStripMenuItem1->Name = L"updateToolStripMenuItem1";
+			this->updateToolStripMenuItem1->Size = System::Drawing::Size(112, 22);
+			this->updateToolStripMenuItem1->Text = L"Update";
+			this->updateToolStripMenuItem1->Click += gcnew System::EventHandler(this, &Form1::updateToolStripMenuItemLeft_Click);
 			// 
 			// Form1
 			// 
@@ -368,7 +399,6 @@ namespace DeCom {
 			this->Name = L"Form1";
 			this->Text = L"DeCom";
 			this->Load += gcnew System::EventHandler(this, &Form1::Form1_Load);
-			this->contextMenuStrip1->ResumeLayout(false);
 			this->splitContainer1->Panel1->ResumeLayout(false);
 			this->splitContainer1->Panel2->ResumeLayout(false);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainer1))->EndInit();
@@ -381,6 +411,8 @@ namespace DeCom {
 			this->splitContainer2->ResumeLayout(false);
 			this->menuStrip1->ResumeLayout(false);
 			this->menuStrip1->PerformLayout();
+			this->contextMenuStrip1->ResumeLayout(false);
+			this->contextMenuStrip2->ResumeLayout(false);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -474,8 +506,22 @@ namespace DeCom {
              {
                  RenderActions::Determine_Size(MyList1,MyList2,textBox1,textBox2);  //вызов метода определения размера
              }
-	private: System::Void launchToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-		String^ AboutLibName = "D:/БГУИР/3 курс/Куросовой проект ( 6 семестр)/MyDLL/Debug/MyDLL.dll";
+	private: System::Void archiveToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+		String^ AboutLibName;
+		try
+		{
+			OpenFileDialog^ openFile = gcnew OpenFileDialog();
+			openFile->Title = "Выберите файлы, которые необходимо заархивировать";
+
+			if (openFile->ShowDialog() == ::DialogResult::OK)
+			{
+				AboutLibName = openFile->FileName;
+			}
+			else return;
+		}
+		catch (Exception^ ex) { MessageBox::Show("Ошибка во время выбора файлов для архивации, попробуйте еще раз! " + ex->Message, "Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Error); }
+		
+		//String^ AboutLibName = "D:/БГУИР/3 курс/Куросовой проект ( 6 семестр)/MyDLL/Debug/MyDLL.dll";
 		if (!File::Exists(AboutLibName)) { 
 			MessageBox::Show("File not found"); 
 			return; 
@@ -493,11 +539,30 @@ namespace DeCom {
 				///создаем объект полученного класса
 				IPlugin^ about = (IPlugin^)Activator::CreateInstance(t);
 				///вызываем его метод GetAboutText
-				MessageBox::Show(about->GetAboutText());
+				about->Launch(MyList1, MyList2, textBox1, textBox2);
 				break;
 			}
 		}
 	}
-};
+	
+	private: System::Void updateToolStripMenuItemRight_Click(System::Object^  sender, System::EventArgs^  e) {
+		RenderActions::RenderFileList(MyList2, textBox2, textBox2->Text);
+	}
+	private: System::Void updateToolStripMenuItemLeft_Click(System::Object^  sender, System::EventArgs^  e) {
+		RenderActions::RenderFileList(MyList1, textBox1, textBox1->Text);
+	}
+	private: System::Void MyList2_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+		if (e->Button == ::MouseButtons::Right)       //проверка на нажатие
+		{
+			contextMenuStrip1->Show(Cursor->Position); 
+		}
+	}
+	private: System::Void MyList1_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+		if (e->Button == ::MouseButtons::Right)       //проверка на нажатие
+		{
+			contextMenuStrip2->Show(Cursor->Position);
+		}
+	}
+	};
 }
 
