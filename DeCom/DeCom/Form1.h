@@ -65,11 +65,13 @@ namespace DeCom {
 	private: System::Windows::Forms::ToolStripMenuItem^  programToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  optionsToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  pluginsToolStripMenuItem;
-	private: System::Windows::Forms::ToolStripMenuItem^  launchToolStripMenuItem;
+
+
 	private: System::Windows::Forms::ContextMenuStrip^  contextMenuStrip1;
 	private: System::Windows::Forms::ToolStripMenuItem^  updateToolStripMenuItem;
 	private: System::Windows::Forms::ContextMenuStrip^  contextMenuStrip2;
 	private: System::Windows::Forms::ToolStripMenuItem^  updateToolStripMenuItem1;
+	private: System::Windows::Forms::ToolStripMenuItem^  loadPluginToolStripMenuItem1;
 
 
 
@@ -110,7 +112,7 @@ namespace DeCom {
 			this->programToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->optionsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->pluginsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->launchToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->loadPluginToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->contextMenuStrip1 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->updateToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->contextMenuStrip2 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
@@ -336,24 +338,26 @@ namespace DeCom {
 			// 
 			// optionsToolStripMenuItem
 			// 
-			this->optionsToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->pluginsToolStripMenuItem });
+			this->optionsToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+				this->pluginsToolStripMenuItem,
+					this->loadPluginToolStripMenuItem1
+			});
 			this->optionsToolStripMenuItem->Name = L"optionsToolStripMenuItem";
 			this->optionsToolStripMenuItem->Size = System::Drawing::Size(61, 20);
 			this->optionsToolStripMenuItem->Text = L"Options";
 			// 
 			// pluginsToolStripMenuItem
 			// 
-			this->pluginsToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->launchToolStripMenuItem });
 			this->pluginsToolStripMenuItem->Name = L"pluginsToolStripMenuItem";
-			this->pluginsToolStripMenuItem->Size = System::Drawing::Size(113, 22);
+			this->pluginsToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->pluginsToolStripMenuItem->Text = L"Plugins";
 			// 
-			// launchToolStripMenuItem
+			// loadPluginToolStripMenuItem1
 			// 
-			this->launchToolStripMenuItem->Name = L"launchToolStripMenuItem";
-			this->launchToolStripMenuItem->Size = System::Drawing::Size(114, 22);
-			this->launchToolStripMenuItem->Text = L"Archive";
-			this->launchToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::archiveToolStripMenuItem_Click);
+			this->loadPluginToolStripMenuItem1->Name = L"loadPluginToolStripMenuItem1";
+			this->loadPluginToolStripMenuItem1->Size = System::Drawing::Size(152, 22);
+			this->loadPluginToolStripMenuItem1->Text = L"Load Plugin";
+			this->loadPluginToolStripMenuItem1->Click += gcnew System::EventHandler(this, &Form1::loadPluginToolStripMenuItem_Click);
 			// 
 			// contextMenuStrip1
 			// 
@@ -506,7 +510,7 @@ namespace DeCom {
              {
                  RenderActions::Determine_Size(MyList1,MyList2,textBox1,textBox2);  //вызов метода определения размера
              }
-	private: System::Void archiveToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+	private: System::Void loadPluginToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 		String^ AboutLibName;
 		try
 		{
@@ -521,11 +525,6 @@ namespace DeCom {
 		}
 		catch (Exception^ ex) { MessageBox::Show("Ошибка во время выбора файлов для архивации, попробуйте еще раз! " + ex->Message, "Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Error); }
 		
-		//String^ AboutLibName = "D:/БГУИР/3 курс/Куросовой проект ( 6 семестр)/MyDLL/Debug/MyDLL.dll";
-		if (!File::Exists(AboutLibName)) { 
-			MessageBox::Show("File not found"); 
-			return; 
-		}
 		///Загружаем сборку
 		Assembly^ AboutAssembly = Assembly::LoadFrom(AboutLibName);
 
@@ -539,10 +538,12 @@ namespace DeCom {
 				///создаем объект полученного класса
 				IPlugin^ about = (IPlugin^)Activator::CreateInstance(t);
 				///вызываем его метод GetAboutText
-				about->Launch(MyList1, MyList2, textBox1, textBox2);
+				about->Init(MyList1, MyList2, textBox1, textBox2, pluginsToolStripMenuItem);
 				break;
 			}
 		}
+		RenderActions::RenderFileList(MyList1, textBox1, textBox1->Text);
+		RenderActions::RenderFileList(MyList2, textBox2, textBox2->Text);
 	}
 	
 	private: System::Void updateToolStripMenuItemRight_Click(System::Object^  sender, System::EventArgs^  e) {

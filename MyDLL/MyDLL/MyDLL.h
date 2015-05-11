@@ -15,10 +15,27 @@ using namespace MyLibrary;
 
 namespace MyDll {
 
-	public ref class MyTestPlugin:IPlugin
+	public ref class ArchivePlugin:IPlugin
 	{
 	public:
-		virtual void Launch(ListView^ MyList1, ListView^ MyList2, TextBox^ textBox1, TextBox^ textBox2)
+		ListView^ MyList1;
+		ListView^ MyList2;
+		TextBox^ textBox1;
+		TextBox^ textBox2;
+
+	public:
+		virtual void Init(ListView^ MyList1, ListView^ MyList2, TextBox^ textBox1, TextBox^ textBox2, ToolStripMenuItem^ pluginMenu)
+		{
+			this->MyList1 = MyList1;
+			this->MyList2 = MyList2;
+			this->textBox1 = textBox1;
+			this->textBox2 = textBox2;
+			ToolStripMenuItem^ newPlugin = gcnew ToolStripMenuItem();
+			newPlugin->Text = "Archive";
+			newPlugin->Click += gcnew System::EventHandler(this, &MyDll::ArchivePlugin::Launch);
+			pluginMenu->DropDownItems->Add(newPlugin);
+		}
+		virtual void Launch(Object^ e, EventArgs^ arg)
 		{
 			try{                       //начало блока try
 				int flag = 0;

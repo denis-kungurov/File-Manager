@@ -17,6 +17,7 @@ namespace MyLibrary {
 
 	public interface class IPlugin
 	{
-		void Launch(ListView^ MyList1, ListView^ MyList2, TextBox^ textBox1, TextBox^ textBox2);
+		void Init(ListView^ MyList1, ListView^ MyList2, TextBox^ textBox1, TextBox^ textBox2, ToolStripMenuItem^ pluginMenu);
+		void Launch(Object^ e, EventArgs^ arg);
 	};
 }

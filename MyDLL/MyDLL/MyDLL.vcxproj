@@ -75,7 +75,7 @@
       <HintPath>..\Debug\Ionic.Zip.dll</HintPath>
     </Reference>
     <Reference Include="IPlugin">
-      <HintPath>..\..\File-Manager\DeCom\Debug\IPlugin.dll</HintPath>
+      <HintPath>..\..\DeCom\Debug\IPlugin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
