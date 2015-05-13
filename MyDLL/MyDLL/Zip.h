@@ -1,4 +1,4 @@
-// MyDLL.h
+// Zip.h
 
 #pragma once
 
@@ -15,9 +15,10 @@ using namespace MyLibrary;
 
 namespace MyDll {
 
-	public ref class ArchivePlugin:IPlugin
+	public ref class ZipPlugin:IPlugin
 	{
 	public:
+		String^ name = "Zip";
 		ListView^ MyList1;
 		ListView^ MyList2;
 		TextBox^ textBox1;
@@ -26,13 +27,18 @@ namespace MyDll {
 	public:
 		virtual void Init(ListView^ MyList1, ListView^ MyList2, TextBox^ textBox1, TextBox^ textBox2, ToolStripMenuItem^ pluginMenu)
 		{
+			auto items = pluginMenu->DropDownItems;
+			for each(ToolStripMenuItem^ item in items)
+				if (item->Text == name)
+					return;
+
 			this->MyList1 = MyList1;
 			this->MyList2 = MyList2;
 			this->textBox1 = textBox1;
 			this->textBox2 = textBox2;
 			ToolStripMenuItem^ newPlugin = gcnew ToolStripMenuItem();
-			newPlugin->Text = "Archive";
-			newPlugin->Click += gcnew System::EventHandler(this, &MyDll::ArchivePlugin::Launch);
+			newPlugin->Text = "Zip";
+			newPlugin->Click += gcnew System::EventHandler(this, &MyDll::ZipPlugin::Launch);
 			pluginMenu->DropDownItems->Add(newPlugin);
 		}
 		virtual void Launch(Object^ e, EventArgs^ arg)

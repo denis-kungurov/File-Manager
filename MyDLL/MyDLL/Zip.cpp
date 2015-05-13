@@ -2,5 +2,5 @@
 
 #include "stdafx.h"
 
-#include "MyDLL.h"
+#include "Zip.h"
 
