@@ -104,4 +104,25 @@ namespace DeCom
             MessageBox::Show(obj->Message);            //вывод сообщения об ошибке
         }
     }
+
+	String^ RenderActions::OpenDll(ObjectToPlugin ^object)
+	{
+		///Загружаем сборку
+		Assembly^ AboutAssembly = Assembly::LoadFrom(object->Path);
+
+		///в цикле проходим по всем public-типам сборки
+		for each(Type^ t in AboutAssembly->GetExportedTypes())
+		{
+			///если это класс,который реализует интерфейс IPlugin,
+			///то это то,что нам нужно Smile
+			if (t->IsClass && IPlugin::typeid->IsAssignableFrom(t))
+			{
+				///создаем объект полученного класса
+				IPlugin^ about = (IPlugin^)Activator::CreateInstance(t);
+				///вызываем его метод GetAboutText
+				about->Load(object);
+				return about->GetName();
+			}
+		}
+	}
 };

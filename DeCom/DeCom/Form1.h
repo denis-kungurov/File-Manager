@@ -438,7 +438,17 @@ namespace DeCom {
              {
                  RenderActions::RenderFileList(MyList1,textBox1);         //Вызов метода заполнения MyList1, MyList2
                  RenderActions::RenderFileList(MyList2,textBox2);         //списком файлов и папок
-
+				 auto pluginsPathes = File::ReadAllLines(Directory::GetCurrentDirectory() + "\\" + "Plugins.txt");
+				 List<String^>^ pluginsList = gcnew List<String^>(pluginsPathes);
+				 for each(String^ path in pluginsList)
+				 {
+					 if ((String::IsNullOrEmpty(path) || String::IsNullOrWhiteSpace(path)) == false)
+					 {
+						 path = path->Remove(0, path->IndexOf(":") + 1);
+						 ObjectToPlugin^ object = gcnew ObjectToPlugin(MyList1, MyList2, textBox1, textBox2, optionsToolStripMenuItem, contextMenuStrip1, contextMenuStrip2, path);
+						 RenderActions::OpenDll(object);
+					 }
+				 }
              }
         //Обработка события нажатия кнопки "Browse" для MyList1
     private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e)
@@ -535,27 +545,12 @@ namespace DeCom {
 		}
 		catch (Exception^ ex) { MessageBox::Show("Ошибка во время выбора файлов для архивации, попробуйте еще раз! " + ex->Message, "Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Error); }
 		
-		///Загружаем сборку
-		Assembly^ AboutAssembly = Assembly::LoadFrom(AboutLibName);
 		ObjectToPlugin^ object = gcnew ObjectToPlugin(MyList1, MyList2, textBox1, textBox2, optionsToolStripMenuItem, contextMenuStrip1, contextMenuStrip2, AboutLibName);
 
-
-		///в цикле проходим по всем public-типам сборки
-		for each(Type^ t in AboutAssembly->GetExportedTypes())
-		{
-			///если это класс,который реализует интерфейс IPlugin,
-			///то это то,что нам нужно Smile
-			if (t->IsClass && IPlugin::typeid->IsAssignableFrom(t))
-			{
-				///создаем объект полученного класса
-				IPlugin^ about = (IPlugin^)Activator::CreateInstance(t);
-				///вызываем его метод GetAboutText
-				about->Load(object);
-				break;
-			}
-		}
-		RenderActions::RenderFileList(MyList1, textBox1, textBox1->Text);
-		RenderActions::RenderFileList(MyList2, textBox2, textBox2->Text);
+		String ^name = RenderActions::OpenDll(object);
+		auto sw = gcnew StreamWriter(Directory::GetCurrentDirectory() + "\\" + "Plugins.txt", true);
+		sw->WriteLine(name + ":" + AboutLibName);
+		sw->Close();
 	}
 	
 	private: System::Void updateToolStripMenuItemRight_Click(System::Object^  sender, System::EventArgs^  e) {

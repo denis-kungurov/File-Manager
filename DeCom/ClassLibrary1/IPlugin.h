@@ -17,6 +17,8 @@ namespace MyLibrary {
 
 	public interface class IPlugin
 	{
+	public:
+		String^ GetName();
 		void Load(ObjectToPlugin^ object);
 		void UnLoad(Object^ e, EventArgs^ arg);
 		void Launch(Object^ e, EventArgs^ arg);

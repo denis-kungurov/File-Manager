@@ -30,6 +30,11 @@ namespace MyDll {
 		ToolStripItemCollection^ optionMenuItems;
 
 	public:
+		virtual String^ GetName()
+		{
+			return name;
+		}
+
 		virtual void Load(DeCom::ObjectToPlugin^ object)
 		{
 			deletePluginMenu = nullptr;
@@ -71,9 +76,6 @@ namespace MyDll {
 			deletePlugin->Text = name;
 			deletePlugin->Click += gcnew System::EventHandler(this, &MyDll::ZipPlugin::UnLoad);
 			deletePluginMenu->DropDownItems->Add(deletePlugin);
-			auto sw = gcnew StreamWriter(Pathes,true);
-			sw->WriteLine(name + ":" + path);
-			sw->Close();
 		}
 
 		virtual void UnLoad(Object^ e, EventArgs^ arg)
