@@ -5,6 +5,7 @@
 using namespace System;
 using namespace System::ComponentModel;
 using namespace System::Collections;
+using namespace System::Collections::Generic;
 using namespace System::Windows::Forms;
 using namespace System::Data;
 using namespace System::Drawing;
@@ -19,28 +20,98 @@ namespace MyDll {
 	{
 	public:
 		String^ name = "UnZip";
+		String^ Pathes;
+		String^ path;
 		ListView^ MyList1;
 		ListView^ MyList2;
 		TextBox^ textBox1;
 		TextBox^ textBox2;
+		ToolStripMenuItem ^pluginsMenu;
+		ToolStripMenuItem ^deletePluginMenu;
+		ToolStripItemCollection^ optionMenuItems;
 
 	public:
-		virtual void Init(ListView^ MyList1, ListView^ MyList2, TextBox^ textBox1, TextBox^ textBox2, ToolStripMenuItem^ pluginMenu)
+		virtual void Load(DeCom::ObjectToPlugin^ object)
 		{
-			auto items = pluginMenu->DropDownItems;
+			deletePluginMenu = nullptr;
+			optionMenuItems = object->optionsToolStripMenuItem->DropDownItems;
+			for each(ToolStripMenuItem^ item in optionMenuItems){
+				if (item->Text == "Plugins")
+				{
+					pluginsMenu = item;
+				}
+				if (item->Text == "Delete Plugin ...")
+				{
+					deletePluginMenu = item;
+				}
+			}
+			if (deletePluginMenu == nullptr)
+			{
+				ToolStripMenuItem ^item = gcnew ToolStripMenuItem();
+				item->Text = "Delete Plugin ...";
+				optionMenuItems->Add(item);
+				deletePluginMenu = item;
+			}
+
+			auto items = pluginsMenu->DropDownItems;
 			for each(ToolStripMenuItem^ item in items)
 				if (item->Text == name)
 					return;
 
-			this->MyList1 = MyList1;
-			this->MyList2 = MyList2;
-			this->textBox1 = textBox1;
-			this->textBox2 = textBox2;
+			this->MyList1 = object->MyList1;
+			this->MyList2 = object->MyList2;
+			this->textBox1 = object->textBox1;
+			this->textBox2 = object->textBox2;
+			this->Pathes = object->Pathes;
+			this->path = object->Path;
 			ToolStripMenuItem^ newPlugin = gcnew ToolStripMenuItem();
 			newPlugin->Text = name;
 			newPlugin->Click += gcnew System::EventHandler(this, &MyDll::UnZipPlugin::Launch);
-			pluginMenu->DropDownItems->Add(newPlugin);
+			pluginsMenu->DropDownItems->Add(newPlugin);
+			ToolStripMenuItem^ deletePlugin = gcnew ToolStripMenuItem();
+			deletePlugin->Text = name;
+			deletePlugin->Click += gcnew System::EventHandler(this, &MyDll::UnZipPlugin::UnLoad);
+			deletePluginMenu->DropDownItems->Add(deletePlugin);
+			auto sw = gcnew StreamWriter(Pathes, true);
+			sw->WriteLine(name + ":" + path);
+			sw->Close();
 		}
+
+		virtual void UnLoad(Object^ e, EventArgs^ arg)
+		{
+			for each(ToolStripMenuItem ^item in pluginsMenu->DropDownItems)
+			{
+				if (item->Text == name)
+				{
+					pluginsMenu->DropDownItems->Remove(item);
+					break;
+				}
+			}
+			for each(ToolStripMenuItem ^item in deletePluginMenu->DropDownItems)
+			{
+				if (item->Text == name)
+				{
+					deletePluginMenu->DropDownItems->Remove(item);
+					if (deletePluginMenu->DropDownItems->Count == 0)
+						optionMenuItems->Remove(deletePluginMenu);
+					break;
+				}
+			}
+			auto sr = gcnew StreamReader(Pathes);
+			String ^str = sr->ReadToEnd();
+			str = str->Replace(name + ":" + path + "\r\n", "");
+			sr->Close();
+			auto sw = gcnew StreamWriter(Pathes, false);
+			sw->Write(str);
+			sw->Close();
+
+		}
+
+		bool StartWith(String ^s)
+		{
+			return s->ToLower()->StartsWith(name + ":");
+		};
+
 		virtual void Launch(Object^ e, EventArgs^ arg)
 		{
 			try{                       //начало блока try

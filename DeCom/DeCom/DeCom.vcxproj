@@ -96,6 +96,7 @@
     <ClCompile Include="ActionHandlers.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="DeCom.cpp" />
+    <ClCompile Include="ObjectToPlugin.cpp" />
     <ClCompile Include="RenderActions.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

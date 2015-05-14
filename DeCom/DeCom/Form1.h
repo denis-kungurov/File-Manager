@@ -111,6 +111,7 @@ namespace DeCom {
 			this->button_Delete = (gcnew System::Windows::Forms::Button());
 			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
 			this->programToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->exitToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->optionsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->pluginsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->loadPluginToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -118,7 +119,6 @@ namespace DeCom {
 			this->updateToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->contextMenuStrip2 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->updateToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->exitToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainer1))->BeginInit();
 			this->splitContainer1->Panel1->SuspendLayout();
 			this->splitContainer1->Panel2->SuspendLayout();
@@ -339,6 +339,13 @@ namespace DeCom {
 			this->programToolStripMenuItem->Size = System::Drawing::Size(65, 20);
 			this->programToolStripMenuItem->Text = L"Program";
 			// 
+			// exitToolStripMenuItem
+			// 
+			this->exitToolStripMenuItem->Name = L"exitToolStripMenuItem";
+			this->exitToolStripMenuItem->Size = System::Drawing::Size(92, 22);
+			this->exitToolStripMenuItem->Text = L"Exit";
+			this->exitToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::exitToolStripMenuItem_Click);
+			// 
 			// optionsToolStripMenuItem
 			// 
 			this->optionsToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
@@ -352,13 +359,13 @@ namespace DeCom {
 			// pluginsToolStripMenuItem
 			// 
 			this->pluginsToolStripMenuItem->Name = L"pluginsToolStripMenuItem";
-			this->pluginsToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->pluginsToolStripMenuItem->Size = System::Drawing::Size(149, 22);
 			this->pluginsToolStripMenuItem->Text = L"Plugins";
 			// 
 			// loadPluginToolStripMenuItem1
 			// 
 			this->loadPluginToolStripMenuItem1->Name = L"loadPluginToolStripMenuItem1";
-			this->loadPluginToolStripMenuItem1->Size = System::Drawing::Size(152, 22);
+			this->loadPluginToolStripMenuItem1->Size = System::Drawing::Size(149, 22);
 			this->loadPluginToolStripMenuItem1->Text = L"Load Plugin ...";
 			this->loadPluginToolStripMenuItem1->Click += gcnew System::EventHandler(this, &Form1::loadPluginToolStripMenuItem_Click);
 			// 
@@ -387,13 +394,6 @@ namespace DeCom {
 			this->updateToolStripMenuItem1->Size = System::Drawing::Size(112, 22);
 			this->updateToolStripMenuItem1->Text = L"Update";
 			this->updateToolStripMenuItem1->Click += gcnew System::EventHandler(this, &Form1::updateToolStripMenuItemLeft_Click);
-			// 
-			// exitToolStripMenuItem
-			// 
-			this->exitToolStripMenuItem->Name = L"exitToolStripMenuItem";
-			this->exitToolStripMenuItem->Size = System::Drawing::Size(152, 22);
-			this->exitToolStripMenuItem->Text = L"Exit";
-			this->exitToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::exitToolStripMenuItem_Click);
 			// 
 			// Form1
 			// 
@@ -537,6 +537,8 @@ namespace DeCom {
 		
 		///Загружаем сборку
 		Assembly^ AboutAssembly = Assembly::LoadFrom(AboutLibName);
+		ObjectToPlugin^ object = gcnew ObjectToPlugin(MyList1, MyList2, textBox1, textBox2, optionsToolStripMenuItem, contextMenuStrip1, contextMenuStrip2, AboutLibName);
+
 
 		///в цикле проходим по всем public-типам сборки
 		for each(Type^ t in AboutAssembly->GetExportedTypes())
@@ -548,7 +550,7 @@ namespace DeCom {
 				///создаем объект полученного класса
 				IPlugin^ about = (IPlugin^)Activator::CreateInstance(t);
 				///вызываем его метод GetAboutText
-				about->Init(MyList1, MyList2, textBox1, textBox2, pluginsToolStripMenuItem);
+				about->Load(object);
 				break;
 			}
 		}
@@ -562,21 +564,24 @@ namespace DeCom {
 	private: System::Void updateToolStripMenuItemLeft_Click(System::Object^  sender, System::EventArgs^  e) {
 		RenderActions::RenderFileList(MyList1, textBox1, textBox1->Text);
 	}
-	private: System::Void MyList2_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
-		if (e->Button == ::MouseButtons::Right)       //проверка на нажатие
-		{
-			contextMenuStrip1->Show(Cursor->Position); 
-		}
-	}
+
 	private: System::Void MyList1_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
 		if (e->Button == ::MouseButtons::Right)       //проверка на нажатие
 		{
 			contextMenuStrip2->Show(Cursor->Position);
 		}
 	}
+	private: System::Void MyList2_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+		if (e->Button == ::MouseButtons::Right)       //проверка на нажатие
+		{
+			contextMenuStrip1->Show(Cursor->Position);
+		}
+	}
 	private: System::Void exitToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 		Application::Exit();
 	}
+private: System::Void MyList2_Click(System::Object^  sender, System::EventArgs^  e) {
+}
 };
 }
 

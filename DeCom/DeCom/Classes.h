@@ -17,14 +17,30 @@ namespace DeCom
         static void DeleteClick_Action(ListView^ MyList1,ListView^ MyList2, TextBox^ textBox1, TextBox^ textBox2);
         static void MoveClick_Action(ListView^ MyList1,ListView^ MyList2, TextBox^ textBox1, TextBox^ textBox2);
     };
-    static class RenderActions{
+	static class RenderActions{
     public:
         static void RenderFileList(ListView^ listView, TextBox^ tb, String^ defaultPath = "C:/");
         static void Determine_Size(ListView^ MyList1,ListView^ MyList2, TextBox^ textBox1, TextBox^ textBox2);
     };
-    static class SupportFunctions{
+	static class SupportFunctions{
     public:
         static void CopyDir(String^ FromDir, String^ ToDir);
         static double SizeOfDirectory(System::IO::DirectoryInfo ^dir);
     };
+	public ref class ObjectToPlugin
+	{
+	public:
+		String ^Pathes = Directory::GetCurrentDirectory() + "\\" + "Plugins.txt";
+		String ^Path;
+		ListView^ MyList1;
+		ListView^ MyList2;
+		TextBox^ textBox1;
+		TextBox^ textBox2;
+		ToolStripMenuItem^ optionsToolStripMenuItem;
+		ContextMenuStrip^ contextMenuStrip1;
+		ContextMenuStrip^ contextMenuStrip2;
+	public:
+		ObjectToPlugin();
+		ObjectToPlugin(ListView^ myList1, ListView^ myList2, TextBox^ textB1, TextBox^ textB2, ToolStripMenuItem^ optionsTSMI, ContextMenuStrip^ contextMS1, ContextMenuStrip^ contextMS2, String^ path);
+	};
 }

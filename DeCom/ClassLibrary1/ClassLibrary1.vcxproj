@@ -72,8 +72,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Reference Include="DeCom">
+      <HintPath>..\Debug\DeCom.exe</HintPath>
+    </Reference>
     <Reference Include="Ionic.Zip">
       <HintPath>..\Debug\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="IPlugin">
+      <HintPath>..\Debug\IPlugin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

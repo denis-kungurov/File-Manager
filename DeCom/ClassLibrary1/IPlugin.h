@@ -1,5 +1,4 @@
 // IPlugin.h
-
 #pragma once
 
 using namespace System;
@@ -12,12 +11,14 @@ using namespace System::IO;
 using namespace System::IO::Compression;
 using namespace System::Threading;
 using namespace Ionic;
+using namespace DeCom;
 
 namespace MyLibrary {
 
 	public interface class IPlugin
 	{
-		void Init(ListView^ MyList1, ListView^ MyList2, TextBox^ textBox1, TextBox^ textBox2, ToolStripMenuItem^ pluginMenu);
+		void Load(ObjectToPlugin^ object);
+		void UnLoad(Object^ e, EventArgs^ arg);
 		void Launch(Object^ e, EventArgs^ arg);
 	};
 }
