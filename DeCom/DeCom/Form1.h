@@ -72,6 +72,7 @@ namespace DeCom {
 	private: System::Windows::Forms::ContextMenuStrip^  contextMenuStrip2;
 	private: System::Windows::Forms::ToolStripMenuItem^  updateToolStripMenuItem1;
 	private: System::Windows::Forms::ToolStripMenuItem^  loadPluginToolStripMenuItem1;
+	private: System::Windows::Forms::ToolStripMenuItem^  exitToolStripMenuItem;
 
 
 
@@ -117,6 +118,7 @@ namespace DeCom {
 			this->updateToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->contextMenuStrip2 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->updateToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->exitToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainer1))->BeginInit();
 			this->splitContainer1->Panel1->SuspendLayout();
 			this->splitContainer1->Panel2->SuspendLayout();
@@ -332,6 +334,7 @@ namespace DeCom {
 			// 
 			// programToolStripMenuItem
 			// 
+			this->programToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->exitToolStripMenuItem });
 			this->programToolStripMenuItem->Name = L"programToolStripMenuItem";
 			this->programToolStripMenuItem->Size = System::Drawing::Size(65, 20);
 			this->programToolStripMenuItem->Text = L"Program";
@@ -356,7 +359,7 @@ namespace DeCom {
 			// 
 			this->loadPluginToolStripMenuItem1->Name = L"loadPluginToolStripMenuItem1";
 			this->loadPluginToolStripMenuItem1->Size = System::Drawing::Size(152, 22);
-			this->loadPluginToolStripMenuItem1->Text = L"Load Plugin";
+			this->loadPluginToolStripMenuItem1->Text = L"Load Plugin ...";
 			this->loadPluginToolStripMenuItem1->Click += gcnew System::EventHandler(this, &Form1::loadPluginToolStripMenuItem_Click);
 			// 
 			// contextMenuStrip1
@@ -384,6 +387,13 @@ namespace DeCom {
 			this->updateToolStripMenuItem1->Size = System::Drawing::Size(112, 22);
 			this->updateToolStripMenuItem1->Text = L"Update";
 			this->updateToolStripMenuItem1->Click += gcnew System::EventHandler(this, &Form1::updateToolStripMenuItemLeft_Click);
+			// 
+			// exitToolStripMenuItem
+			// 
+			this->exitToolStripMenuItem->Name = L"exitToolStripMenuItem";
+			this->exitToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->exitToolStripMenuItem->Text = L"Exit";
+			this->exitToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::exitToolStripMenuItem_Click);
 			// 
 			// Form1
 			// 
@@ -564,6 +574,9 @@ namespace DeCom {
 			contextMenuStrip2->Show(Cursor->Position);
 		}
 	}
-	};
+	private: System::Void exitToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+		Application::Exit();
+	}
+};
 }
 
