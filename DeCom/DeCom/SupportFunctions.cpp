@@ -35,6 +35,7 @@ namespace DeCom
         } catch (System::UnauthorizedAccessException^ obj)
         {
             MessageBox::Show(obj->Message);
+			return 0;
         }
     }
 }

@@ -124,5 +124,6 @@ namespace DeCom
 				return about->GetName();
 			}
 		}
+		return nullptr;
 	}
 };

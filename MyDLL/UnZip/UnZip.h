@@ -29,6 +29,8 @@ namespace MyDll {
 		ToolStripMenuItem ^pluginsMenu;
 		ToolStripMenuItem ^deletePluginMenu;
 		ToolStripItemCollection^ optionMenuItems;
+		ContextMenuStrip ^contextMenuItem1;
+		ContextMenuStrip ^contextMenuItem2;
 
 	public:
 		virtual String^ GetName()
@@ -69,6 +71,8 @@ namespace MyDll {
 			this->textBox2 = object->textBox2;
 			this->Pathes = object->Pathes;
 			this->path = object->Path;
+			this->contextMenuItem1 = object->contextMenuStrip1;
+			this->contextMenuItem2 = object->contextMenuStrip2;
 			ToolStripMenuItem^ newPlugin = gcnew ToolStripMenuItem();
 			newPlugin->Text = name;
 			newPlugin->Click += gcnew System::EventHandler(this, &MyDll::UnZipPlugin::Launch);
@@ -77,6 +81,15 @@ namespace MyDll {
 			deletePlugin->Text = name;
 			deletePlugin->Click += gcnew System::EventHandler(this, &MyDll::UnZipPlugin::UnLoad);
 			deletePluginMenu->DropDownItems->Add(deletePlugin);
+
+			ToolStripMenuItem^ newContextMenuItem1 = gcnew ToolStripMenuItem();
+			ToolStripMenuItem^ newContextMenuItem2 = gcnew ToolStripMenuItem();
+			newContextMenuItem1->Text = name;
+			newContextMenuItem2->Text = name;
+			newContextMenuItem1->Click += gcnew System::EventHandler(this, &MyDll::UnZipPlugin::Launch);
+			newContextMenuItem2->Click += gcnew System::EventHandler(this, &MyDll::UnZipPlugin::Launch);
+			contextMenuItem1->Items->Add(newContextMenuItem1);
+			contextMenuItem2->Items->Add(newContextMenuItem2);
 		}
 
 		virtual void UnLoad(Object^ e, EventArgs^ arg)
@@ -99,6 +112,22 @@ namespace MyDll {
 					break;
 				}
 			}
+			for each(ToolStripItem ^item in contextMenuItem1->Items)
+			{
+				if (item->Text == name)
+				{
+					contextMenuItem1->Items->Remove(item);
+					break;
+				}
+			}
+			for each(ToolStripItem ^item in contextMenuItem2->Items)
+			{
+				if (item->Text == name)
+				{
+					contextMenuItem2->Items->Remove(item);
+					break;
+				}
+			}
 			auto sr = gcnew StreamReader(Pathes);
 			String ^str = sr->ReadToEnd();
 			str = str->Replace(name + ":" + path + "\r\n", "");
@@ -109,12 +138,14 @@ namespace MyDll {
 
 		}
 
-		bool StartWith(String ^s)
-		{
-			return s->ToLower()->StartsWith(name + ":");
-		};
-
 		virtual void Launch(Object^ e, EventArgs^ arg)
+		{
+			Thread^ t1 = gcnew Thread(gcnew ThreadStart(this, &MyDll::UnZipPlugin::DoTask));
+			t1->IsBackground = true;
+			t1->Start();
+		}
+
+		void DoTask()
 		{
 			try{                       //начало блока try
 				int flag = 0;

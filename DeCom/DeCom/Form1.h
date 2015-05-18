@@ -13,6 +13,7 @@ namespace DeCom {
     using namespace System::Windows::Forms;
     using namespace System::Data;
     using namespace System::Drawing;
+	using namespace System::Net;
     using namespace System::IO;
 	using namespace System::IO::Compression;
     using namespace System::Threading;
@@ -373,12 +374,12 @@ namespace DeCom {
 			// 
 			this->contextMenuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->updateToolStripMenuItem });
 			this->contextMenuStrip1->Name = L"contextMenuStrip1";
-			this->contextMenuStrip1->Size = System::Drawing::Size(113, 26);
+			this->contextMenuStrip1->Size = System::Drawing::Size(153, 48);
 			// 
 			// updateToolStripMenuItem
 			// 
 			this->updateToolStripMenuItem->Name = L"updateToolStripMenuItem";
-			this->updateToolStripMenuItem->Size = System::Drawing::Size(112, 22);
+			this->updateToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->updateToolStripMenuItem->Text = L"Update";
 			this->updateToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::updateToolStripMenuItemRight_Click);
 			// 
@@ -516,7 +517,9 @@ namespace DeCom {
              {
                  if( e->KeyData == Keys::Space)       //проверка на нажатие клавишу Space
                  {
-                     Set_Size();              //вызов метода установки размера
+					 Thread^ t1 = gcnew Thread(gcnew ThreadStart(this, &DeCom::Form1::Set_Size));
+					 t1->IsBackground = true;
+                     t1->Start();//вызов метода установки размера
                  }
                  /*System::Action ^ action = gcnew Action(this, &Form1::Set_Size);
 
@@ -525,10 +528,11 @@ namespace DeCom {
                  Thread^ t1 = gcnew Thread(gcnew ThreadStart(this, &RenderActions::SizeOfDirectory));
                  t1->Start();*/
              }
+			 delegate void MyDelegate();
         //Метод установки размера для папки
     private: System::Void Set_Size() 
              {
-                 RenderActions::Determine_Size(MyList1,MyList2,textBox1,textBox2);  //вызов метода определения размера
+				 RenderActions::Determine_Size(MyList1,MyList2,textBox1,textBox2);  //вызов метода определения размера
              }
 	private: System::Void loadPluginToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 		String^ AboutLibName;
