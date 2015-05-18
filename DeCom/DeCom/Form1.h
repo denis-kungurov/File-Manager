@@ -441,6 +441,7 @@ namespace DeCom {
                  RenderActions::RenderFileList(MyList2,textBox2);         //списком файлов и папок
 				 auto pluginsPathes = File::ReadAllLines(Directory::GetCurrentDirectory() + "\\" + "Plugins.txt");
 				 List<String^>^ pluginsList = gcnew List<String^>(pluginsPathes);
+				 
 				 for each(String^ path in pluginsList)
 				 {
 					 if ((String::IsNullOrEmpty(path) || String::IsNullOrWhiteSpace(path)) == false)

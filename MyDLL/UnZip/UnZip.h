@@ -31,6 +31,7 @@ namespace MyDll {
 		ToolStripItemCollection^ optionMenuItems;
 		ContextMenuStrip ^contextMenuItem1;
 		ContextMenuStrip ^contextMenuItem2;
+		DeCom::ProcessingFrom^ procForm;
 
 	public:
 		virtual String^ GetName()
@@ -38,8 +39,21 @@ namespace MyDll {
 			return name;
 		}
 
+		void Assignments(DeCom::ObjectToPlugin^ object)
+		{
+			this->MyList1 = object->MyList1;
+			this->MyList2 = object->MyList2;
+			this->textBox1 = object->textBox1;
+			this->textBox2 = object->textBox2;
+			this->Pathes = object->Pathes;
+			this->path = object->Path;
+			this->contextMenuItem1 = object->contextMenuStrip1;
+			this->contextMenuItem2 = object->contextMenuStrip2;
+		}
+
 		virtual void Load(DeCom::ObjectToPlugin^ object)
 		{
+			Assignments(object);
 			deletePluginMenu = nullptr;
 			optionMenuItems = object->optionsToolStripMenuItem->DropDownItems;
 			for each(ToolStripMenuItem^ item in optionMenuItems){
@@ -65,14 +79,6 @@ namespace MyDll {
 				if (item->Text == name)
 					return;
 
-			this->MyList1 = object->MyList1;
-			this->MyList2 = object->MyList2;
-			this->textBox1 = object->textBox1;
-			this->textBox2 = object->textBox2;
-			this->Pathes = object->Pathes;
-			this->path = object->Path;
-			this->contextMenuItem1 = object->contextMenuStrip1;
-			this->contextMenuItem2 = object->contextMenuStrip2;
 			ToolStripMenuItem^ newPlugin = gcnew ToolStripMenuItem();
 			newPlugin->Text = name;
 			newPlugin->Click += gcnew System::EventHandler(this, &MyDll::UnZipPlugin::Launch);
