@@ -96,6 +96,7 @@ namespace MyDll {
 			newContextMenuItem2->Click += gcnew System::EventHandler(this, &MyDll::ZipPlugin::Launch);
 			contextMenuItem1->Items->Add(newContextMenuItem1);
 			contextMenuItem2->Items->Add(newContextMenuItem2);
+
 		}
 
 		virtual void UnLoad(Object^ e, EventArgs^ arg)
@@ -146,8 +147,13 @@ namespace MyDll {
 
 		virtual void Launch(Object^ e, EventArgs^ arg)
 		{
+			procForm = gcnew DeCom::ProcessingFrom();
+			if (getZipFileName() == "empty") return;
+			procForm->SetFormParams(name + "ping...", name + "ping " + getZipFileName());
+			procForm->StartPosition = FormStartPosition::CenterParent;
+			procForm->Visible = true;
 			Thread^ t1 = gcnew Thread(gcnew ThreadStart(this, &MyDll::ZipPlugin::DoTask));
-			t1->IsBackground = true;
+			t1->IsBackground = false;
 			t1->Start();
 		}
 
@@ -163,7 +169,12 @@ namespace MyDll {
 				}
 				else
 				{
-					if (MyList2->SelectedItems->Count < 0) return;
+					if (MyList2->SelectedItems->Count < 0)
+					{
+						procForm->Visible = false;
+						procForm->Close();
+						return;
+					}
 					selectedItem = MyList2->SelectedItems;
 					flag = 1;
 				}
@@ -215,7 +226,47 @@ namespace MyDll {
 			}
 			catch (IOException^ obj)
 			{
+				procForm->Visible = false;
 				MessageBox::Show(obj->Message);            //вывод сообщения об ошибке
+			}
+			procForm->Visible = false;
+			procForm->Close();
+		}
+
+		String^ getZipFileName()
+		{
+			int flag = 0;
+			ListViewItem ^selectedItem;
+			selectedItem = nullptr;
+			if (MyList1->SelectedItems->Count > 0){           //Проверка на наличие выбранных элементов 
+				selectedItem = MyList1->SelectedItems[0];        //Запись списка элементов
+				if (MyList1->SelectedItems->Count > 1) return nullptr;
+				flag = 0;
+			}
+			else
+			{
+				if (MyList2->SelectedItems->Count <= 0)
+				{
+					return "empty";
+				}
+				selectedItem = MyList2->SelectedItems[0];
+				if (MyList2->SelectedItems->Count > 1) return nullptr;
+				flag = 1;
+			}
+			String^ name = "\\" + selectedItem->Text;         //переменная имени
+			if (selectedItem->Text == "..")              //пропуск элемента перехода на уровень выше
+			{
+				return nullptr;
+			}
+			if (flag == 0)
+			{
+				String ^source = textBox1->Text + name;
+				return source;
+			}
+			else
+			{
+				String ^source = textBox2->Text + name;
+				return source;
 			}
 		}
 	};

@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "Classes.h"
+#include "ProcessingFrom.h"
 
 namespace DeCom 
 {
@@ -61,7 +62,7 @@ namespace DeCom
             }else 
             {
                 if (MyList2->SelectedItems->Count < 0) return;     //выход, если элементы не выделены
-                selectedItem = MyList2->SelectedItems;
+				selectedItem = MyList2->SelectedItems;
                 flag = 1;
             }
             for each (System::Windows::Forms::ListViewItem^ item in selectedItem)     //проход по выделенным элементам
@@ -94,7 +95,7 @@ namespace DeCom
             }
         }catch(IOException^ obj)
         {
-            MessageBox::Show(obj->Message);
+			MessageBox::Show(obj->Message);
         }
     }
     //Обработка события нажатия кнопки удаления
@@ -116,7 +117,7 @@ namespace DeCom
             for each (System::Windows::Forms::ListViewItem^ item in selectedItem)
             {
                 String^ name = "\\" + item->Text;
-                if (flag == 0){
+				if (flag == 0){
                     if (item->Checked)
                     {
                         Directory::Delete(textBox1->Text + name,true);   //вызов функции удаления папки
@@ -125,7 +126,7 @@ namespace DeCom
                         File::Delete(textBox1->Text + name);      //вызов функции удаления файла
                     }
                 }
-                else {
+				else {
                     if (item->Checked)
                     {
                         Directory::Delete(textBox2->Text + name,true);
@@ -145,9 +146,9 @@ namespace DeCom
         {
             MessageBox::Show(obj->Message);
         }catch(UnauthorizedAccessException^ obj)
-        {
+		{
             MessageBox::Show(obj->Message);
-        }
+		}
     }
     //Обработка события нажатия кнопки перемещения
     void ActionHandlers::MoveClick_Action(ListView^ MyList1,ListView^ MyList2, TextBox^ textBox1, TextBox^ textBox2)

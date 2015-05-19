@@ -22,6 +22,11 @@ namespace DeCom {
 			//TODO: Add the constructor code here
 			//
 		}
+		void SetFormParams(String^ title, String^ textbox)
+		{
+			this->Text = title;
+			this->textBox->Text = textbox;
+		}
 
 	protected:
 		/// <summary>
@@ -35,8 +40,10 @@ namespace DeCom {
 			}
 		}
 	private: System::Windows::Forms::TextBox^  textBox;
+
+	private: System::Windows::Forms::PictureBox^  pictureBox2;
 	protected:
-	private: System::Windows::Forms::ProgressBar^  progressBar;
+
 
 	private:
 		/// <summary>
@@ -51,13 +58,16 @@ namespace DeCom {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(ProcessingFrom::typeid));
 			this->textBox = (gcnew System::Windows::Forms::TextBox());
-			this->progressBar = (gcnew System::Windows::Forms::ProgressBar());
+			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// textBox
 			// 
 			this->textBox->BackColor = System::Drawing::SystemColors::Menu;
+			this->textBox->Enabled = false;
 			this->textBox->Location = System::Drawing::Point(12, 12);
 			this->textBox->Multiline = true;
 			this->textBox->Name = L"textBox";
@@ -66,26 +76,29 @@ namespace DeCom {
 			this->textBox->TabIndex = 0;
 			this->textBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
-			// progressBar
+			// pictureBox2
 			// 
-			this->progressBar->Location = System::Drawing::Point(12, 95);
-			this->progressBar->Name = L"progressBar";
-			this->progressBar->Size = System::Drawing::Size(260, 42);
-			this->progressBar->TabIndex = 1;
+			this->pictureBox2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pictureBox2.Image")));
+			this->pictureBox2->Location = System::Drawing::Point(12, 81);
+			this->pictureBox2->Name = L"pictureBox2";
+			this->pictureBox2->Size = System::Drawing::Size(260, 41);
+			this->pictureBox2->TabIndex = 2;
+			this->pictureBox2->TabStop = false;
 			// 
 			// ProcessingFrom
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(284, 149);
-			this->Controls->Add(this->progressBar);
+			this->ClientSize = System::Drawing::Size(284, 136);
+			this->Controls->Add(this->pictureBox2);
 			this->Controls->Add(this->textBox);
-			this->Enabled = false;
 			this->Name = L"ProcessingFrom";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 			this->Text = L"ProcessingFrom";
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox2))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
-			this->Visible = false;
+
 		}
 #pragma endregion
 

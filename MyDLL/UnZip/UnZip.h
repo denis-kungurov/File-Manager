@@ -96,6 +96,9 @@ namespace MyDll {
 			newContextMenuItem2->Click += gcnew System::EventHandler(this, &MyDll::UnZipPlugin::Launch);
 			contextMenuItem1->Items->Add(newContextMenuItem1);
 			contextMenuItem2->Items->Add(newContextMenuItem2);
+
+			procForm = gcnew DeCom::ProcessingFrom();
+			procForm->SetFormParams(name, name + "ing...");
 		}
 
 		virtual void UnLoad(Object^ e, EventArgs^ arg)
@@ -146,8 +149,13 @@ namespace MyDll {
 
 		virtual void Launch(Object^ e, EventArgs^ arg)
 		{
+			procForm = gcnew DeCom::ProcessingFrom();
+			if (getUnzipFileName() == "empty") return;
+			procForm->SetFormParams(name + "ping...", name + "ping " + getUnzipFileName());
+			procForm->StartPosition = FormStartPosition::CenterParent;
+			procForm->Visible = true;
 			Thread^ t1 = gcnew Thread(gcnew ThreadStart(this, &MyDll::UnZipPlugin::DoTask));
-			t1->IsBackground = true;
+			t1->IsBackground = false;
 			t1->Start();
 		}
 
@@ -163,7 +171,12 @@ namespace MyDll {
 				}
 				else
 				{
-					if (MyList2->SelectedItems->Count < 0) return;
+					if (MyList2->SelectedItems->Count < 0)
+					{
+						procForm->Visible = false;
+						procForm->Close();
+						return;
+					}
 					selectedItem = MyList2->SelectedItems;
 					flag = 1;
 				}
@@ -195,7 +208,51 @@ namespace MyDll {
 			}
 			catch (IOException^ obj)
 			{
+				procForm->Visible = false;
 				MessageBox::Show(obj->Message);            //вывод сообщения об ошибке
+			}
+			procForm->Visible = false;
+			procForm->Close();
+		}
+
+		String^ getUnzipFileName()
+		{
+			int flag = 0;
+			ListViewItem ^selectedItem;
+			selectedItem = nullptr;
+			if (MyList1->SelectedItems->Count > 0){           //Проверка на наличие выбранных элементов 
+				selectedItem = MyList1->SelectedItems[0];        //Запись списка элементов
+				if (MyList1->SelectedItems->Count > 1) return nullptr;
+				flag = 0;
+			}
+			else
+			{
+				if (MyList2->SelectedItems->Count <= 0)
+				{
+					return "empty";
+				}
+				selectedItem = MyList2->SelectedItems[0];
+				if (MyList2->SelectedItems->Count > 1) return nullptr;
+				flag = 1;
+			}
+			String^ name = "\\" + selectedItem->Text;         //переменная имени
+			if (selectedItem->Text == "..")              //пропуск элемента перехода на уровень выше
+			{
+				return nullptr;
+			}
+			if (flag == 0)
+			{
+				String ^source = textBox1->Text + name;
+				if (Path::GetExtension(source) != ".zip" && Path::GetExtension(source) != ".rar")
+					return nullptr;
+				return source;
+			}
+			else
+			{
+				String ^source = textBox2->Text + name;
+				if (Path::GetExtension(source) != ".zip" && Path::GetExtension(source) != ".rar")
+					return nullptr;
+				return source;
 			}
 		}
 	};

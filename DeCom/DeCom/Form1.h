@@ -2,6 +2,7 @@
 
 #include "vcclr.h"
 #include "Classes.h"
+#include "ProcessingFrom.h"
 
 
 namespace DeCom {
@@ -74,6 +75,7 @@ namespace DeCom {
 	private: System::Windows::Forms::ToolStripMenuItem^  updateToolStripMenuItem1;
 	private: System::Windows::Forms::ToolStripMenuItem^  loadPluginToolStripMenuItem1;
 	private: System::Windows::Forms::ToolStripMenuItem^  exitToolStripMenuItem;
+
 
 
 
@@ -374,12 +376,12 @@ namespace DeCom {
 			// 
 			this->contextMenuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->updateToolStripMenuItem });
 			this->contextMenuStrip1->Name = L"contextMenuStrip1";
-			this->contextMenuStrip1->Size = System::Drawing::Size(153, 48);
+			this->contextMenuStrip1->Size = System::Drawing::Size(113, 26);
 			// 
 			// updateToolStripMenuItem
 			// 
 			this->updateToolStripMenuItem->Name = L"updateToolStripMenuItem";
-			this->updateToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->updateToolStripMenuItem->Size = System::Drawing::Size(112, 22);
 			this->updateToolStripMenuItem->Text = L"Update";
 			this->updateToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::updateToolStripMenuItemRight_Click);
 			// 
@@ -433,7 +435,7 @@ namespace DeCom {
 
 		}
 #pragma endregion
-
+	public: ProcessingFrom^ procForm;
         //Обработка события загрузки формы
     private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e)   
              {
@@ -491,16 +493,79 @@ namespace DeCom {
         //Обработка события нажатия кнопки "Копировать"
     private: System::Void button_Copy_Click(System::Object^  sender, System::EventArgs^  e) 
              {
-                 ActionHandlers::CopyClick_Action(MyList1,MyList2,textBox1,textBox2);          //вызов метода обработки данного события
+				 procForm = gcnew ProcessingFrom();
+				 if (getActiveItemName() == "empty") return;
+				 if (MyList1->SelectedItems->Count > 0){
+					 procForm->SetFormParams("Copying...", "Copying " + getActiveItemName() +" from " + textBox1->Text + " to " + textBox2->Text);
+				 }
+				 else
+				 {
+					 if (MyList2->SelectedItems->Count < 0) return;
+					 procForm->SetFormParams("Copying...", "Copying " + getActiveItemName() + " from " + textBox2->Text + " to " + textBox1->Text);
+				 }
+				 procForm->Visible = true;
+				 Thread^ t1 = gcnew Thread(gcnew ThreadStart(this, &DeCom::Form1::doCopy));
+				 t1->IsBackground = true;
+				 t1->Start(); 
              }
+	private: System::Void doCopy()
+			{
+				ActionHandlers::CopyClick_Action(MyList1,MyList2,textBox1,textBox2);  //вызов метода обработки данного события
+				procForm->Visible = false;
+				procForm->Close();
+			}
         //Обработка события нажатия кнопки "Удалить"
     private: System::Void button_Delete_Click(System::Object^  sender, System::EventArgs^  e) 
              {
-                 ActionHandlers::DeleteClick_Action(MyList1,MyList2,textBox1,textBox2);         //вызов метода обработки данного события
+				 procForm = gcnew ProcessingFrom();
+				 if (getActiveItemName() == "empty") return;
+				 if (MyList1->SelectedItems->Count > 0){
+					 procForm->SetFormParams("Deleting...", "Deleting " + getActiveItemName() + " from " + textBox1->Text);
+				 }
+				 else
+				 {
+					 if (MyList2->SelectedItems->Count < 0) return;
+					 procForm->SetFormParams("Copying...", "Deleting " + getActiveItemName() + " from " + textBox2->Text);
+				 }
+				 procForm->Visible = true;
+				 Thread^ t1 = gcnew Thread(gcnew ThreadStart(this, &DeCom::Form1::doDelete));
+				 t1->IsBackground = true;
+				 t1->Start();
              }
+
+	private: System::Void doDelete()
+			{
+				ActionHandlers::DeleteClick_Action(MyList1,MyList2,textBox1,textBox2);         //вызов метода обработки данного события
+				procForm->Visible = false;
+				procForm->Close();
+			}
+
+	private: System::String^ getActiveItemName()
+			{
+				int flag = 0;
+				ListViewItem ^selectedItem;
+				selectedItem = nullptr;
+				if (MyList1->SelectedItems->Count > 0){           //Проверка на наличие выбранных элементов 
+					selectedItem = MyList1->SelectedItems[0];        //Запись списка элементов
+					if (MyList1->SelectedItems->Count > 1) return nullptr;
+					flag = 0;
+				}
+				else
+				{
+					if (MyList2->SelectedItems->Count <= 0)
+					{
+						return "empty";
+					}
+					selectedItem = MyList2->SelectedItems[0];
+					if (MyList2->SelectedItems->Count > 1) return nullptr;
+					flag = 1;
+				}
+				return selectedItem->Text;         //переменная имени
+			}
         //Обработка события нажатия кнопки "Переместить"
     private: System::Void button_Replace_Click(System::Object^  sender, System::EventArgs^  e) 
              {
+				 if (getActiveItemName() == "empty") return;
                  ActionHandlers::MoveClick_Action(MyList1,MyList2,textBox1,textBox2); //вызов метода обработки данного события
              }
         //Обработка события изменения состояния MyList1 на "активный"
@@ -529,7 +594,6 @@ namespace DeCom {
                  Thread^ t1 = gcnew Thread(gcnew ThreadStart(this, &RenderActions::SizeOfDirectory));
                  t1->Start();*/
              }
-			 delegate void MyDelegate();
         //Метод установки размера для папки
     private: System::Void Set_Size() 
              {
