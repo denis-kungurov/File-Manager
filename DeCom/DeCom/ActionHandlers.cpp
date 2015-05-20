@@ -184,4 +184,62 @@ namespace DeCom
             MessageBox::Show(obj->Message);
         }
     }
+
+	void ActionHandlers::RenameClick_Action(ListView^ MyList1, ListView^ MyList2, TextBox^ textBox1, TextBox^ textBox2, String^ newName)
+	{
+		try{
+			int flag = 0;
+			auto selectedItem = MyList1->SelectedItems;
+			selectedItem = nullptr;
+			if (MyList1->SelectedItems->Count > 0){
+				selectedItem = MyList1->SelectedItems;
+				flag = 0;
+			}
+			else
+			{
+				if (MyList2->SelectedItems->Count < 0) return;
+				selectedItem = MyList2->SelectedItems;
+				flag = 1;
+			}
+			for each (System::Windows::Forms::ListViewItem^ item in selectedItem)
+			{
+				String^ name = "\\" + item->Text;
+				if (flag == 0){
+					if (item->Checked)
+					{
+						Directory::Move(textBox1->Text + name, textBox1->Text + newName);   //âûçîâ ôóíêöèè óäàëåíèÿ ïàïêè
+					}
+					else
+					{
+						File::Move(textBox1->Text + name, textBox1->Text + newName);      //âûçîâ ôóíêöèè óäàëåíèÿ ôàéëà
+					}
+				}
+				else {
+					if (item->Checked)
+					{
+						Directory::Move(textBox2->Text + name, textBox2->Text + newName);
+					}
+					else
+					{
+						File::Move(textBox2->Text + name, textBox2->Text + newName);
+					}
+				}
+			}
+			if (!flag){
+				RenderActions::RenderFileList(MyList1, textBox1, textBox1->Text);
+			}
+			else {
+				RenderActions::RenderFileList(MyList2, textBox2, textBox2->Text);
+			}
+		}
+		catch (IOException^ obj)
+		{
+			MessageBox::Show(obj->Message);
+		}
+		catch (UnauthorizedAccessException^ obj)
+		{
+			MessageBox::Show(obj->Message);
+		}
+	}
+
 }

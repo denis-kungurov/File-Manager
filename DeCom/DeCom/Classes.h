@@ -33,6 +33,7 @@ namespace DeCom
         static void DoubleClick_Action (ListView^ MyList, TextBox^ textBox);
         static void CopyClick_Action(ListView^ MyList1,ListView^ MyList2, TextBox^ textBox1, TextBox^ textBox2);
         static void DeleteClick_Action(ListView^ MyList1,ListView^ MyList2, TextBox^ textBox1, TextBox^ textBox2);
+		static void RenameClick_Action(ListView^ MyList1, ListView^ MyList2, TextBox^ textBox1, TextBox^ textBox2, String^ newName);
         static void MoveClick_Action(ListView^ MyList1,ListView^ MyList2, TextBox^ textBox1, TextBox^ textBox2);
     };
 	static class RenderActions{
