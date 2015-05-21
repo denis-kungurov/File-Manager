@@ -18,6 +18,8 @@ namespace DeCom {
     using namespace System::IO;
 	using namespace System::IO::Compression;
     using namespace System::Threading;
+	using namespace System::Xml::Linq;
+	using namespace System::Data::Linq;
 	using namespace Ionic;
     using namespace std;
 	using namespace MyLibrary;
@@ -75,6 +77,8 @@ namespace DeCom {
 	private: System::Windows::Forms::ToolStripMenuItem^  updateToolStripMenuItem1;
 	private: System::Windows::Forms::ToolStripMenuItem^  loadPluginToolStripMenuItem1;
 	private: System::Windows::Forms::ToolStripMenuItem^  exitToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  bookmarksToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  addBookmarksToolStripMenuItem;
 
 
 
@@ -122,6 +126,8 @@ namespace DeCom {
 			this->updateToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->contextMenuStrip2 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->updateToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->bookmarksToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->addBookmarksToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainer1))->BeginInit();
 			this->splitContainer1->Panel1->SuspendLayout();
 			this->splitContainer1->Panel2->SuspendLayout();
@@ -351,9 +357,9 @@ namespace DeCom {
 			// 
 			// optionsToolStripMenuItem
 			// 
-			this->optionsToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
-				this->pluginsToolStripMenuItem,
-					this->loadPluginToolStripMenuItem1
+			this->optionsToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+				this->bookmarksToolStripMenuItem,
+					this->pluginsToolStripMenuItem, this->loadPluginToolStripMenuItem1
 			});
 			this->optionsToolStripMenuItem->Name = L"optionsToolStripMenuItem";
 			this->optionsToolStripMenuItem->Size = System::Drawing::Size(61, 20);
@@ -362,13 +368,13 @@ namespace DeCom {
 			// pluginsToolStripMenuItem
 			// 
 			this->pluginsToolStripMenuItem->Name = L"pluginsToolStripMenuItem";
-			this->pluginsToolStripMenuItem->Size = System::Drawing::Size(149, 22);
+			this->pluginsToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->pluginsToolStripMenuItem->Text = L"Plugins";
 			// 
 			// loadPluginToolStripMenuItem1
 			// 
 			this->loadPluginToolStripMenuItem1->Name = L"loadPluginToolStripMenuItem1";
-			this->loadPluginToolStripMenuItem1->Size = System::Drawing::Size(149, 22);
+			this->loadPluginToolStripMenuItem1->Size = System::Drawing::Size(152, 22);
 			this->loadPluginToolStripMenuItem1->Text = L"Load Plugin ...";
 			this->loadPluginToolStripMenuItem1->Click += gcnew System::EventHandler(this, &Form1::loadPluginToolStripMenuItem_Click);
 			// 
@@ -397,6 +403,20 @@ namespace DeCom {
 			this->updateToolStripMenuItem1->Size = System::Drawing::Size(112, 22);
 			this->updateToolStripMenuItem1->Text = L"Update";
 			this->updateToolStripMenuItem1->Click += gcnew System::EventHandler(this, &Form1::updateToolStripMenuItemLeft_Click);
+			// 
+			// bookmarksToolStripMenuItem
+			// 
+			this->bookmarksToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->addBookmarksToolStripMenuItem });
+			this->bookmarksToolStripMenuItem->Name = L"bookmarksToolStripMenuItem";
+			this->bookmarksToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->bookmarksToolStripMenuItem->Text = L"Bookmarks";
+			// 
+			// addBookmarksToolStripMenuItem
+			// 
+			this->addBookmarksToolStripMenuItem->Name = L"addBookmarksToolStripMenuItem";
+			this->addBookmarksToolStripMenuItem->Size = System::Drawing::Size(167, 22);
+			this->addBookmarksToolStripMenuItem->Text = L"Add bookmarks...";
+			this->addBookmarksToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::addBookmarksToolStripMenuItem_Click);
 			// 
 			// Form1
 			// 
@@ -644,8 +664,38 @@ namespace DeCom {
 	private: System::Void exitToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 		Application::Exit();
 	}
-private: System::Void MyList2_Click(System::Object^  sender, System::EventArgs^  e) {
-}
+
+	private: System::Void addBookmarksToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+		FolderBrowserDialog^ fbd = gcnew FolderBrowserDialog();
+		fbd->ShowDialog();                      //Отображение окна выбора директории
+		
+		
+
+		String^ path = fbd->SelectedPath;         //получение выбранного пути
+		if (path != String::Empty)               //проверка на пустоту выбранного пути (выбран ли он)
+		{
+			ToolStripMenuItem^ newBookmark = gcnew ToolStripMenuItem();
+			newBookmark->Text = Path::GetFileName(path);
+			newBookmark->Tag = path;
+			newBookmark->Click += gcnew EventHandler(this, &Form1::RenderListView);
+			bookmarksToolStripMenuItem->DropDownItems->Add(newBookmark);
+		}
+	}
+
+	private: System::Void RenderListView(System::Object^  sender, EventArgs^  e)
+	{
+		String^ path = (String^)((ToolStripMenuItem^)sender)->Tag;
+		if (MyList1->SelectedItems->Count > 0){           //Проверка на наличие выбранных элементов 
+			RenderActions::RenderFileList(MyList1, textBox1, path);
+		}
+		else
+		{
+			if (MyList2->SelectedItems->Count <= 0)
+				RenderActions::RenderFileList(MyList1, textBox1, path);
+			else
+				RenderActions::RenderFileList(MyList2, textBox2, path);
+		}
+	}
 };
 }
 
