@@ -26,9 +26,8 @@ namespace MyDll {
 		ListView^ MyList2;
 		TextBox^ textBox1;
 		TextBox^ textBox2;
-		ToolStripMenuItem ^pluginsMenu;
 		ToolStripMenuItem ^deletePluginMenu; 
-		ToolStripItemCollection^ optionMenuItems;
+		ToolStripItemCollection^ pluginMenuItems;
 		ContextMenuStrip ^contextMenuItem1;
 		ContextMenuStrip ^contextMenuItem2;
 		DeCom::ProcessingFrom^ procForm;
@@ -55,12 +54,8 @@ namespace MyDll {
 		{
 			Assignments(object);
 			deletePluginMenu = nullptr;
-			optionMenuItems = object->optionsToolStripMenuItem->DropDownItems;
-			for each(ToolStripMenuItem^ item in optionMenuItems){
-				if (item->Text == "Plugins")
-				{
-					pluginsMenu = item;
-				}
+			pluginMenuItems = object->pluginsToolStripMenuItem->DropDownItems;
+			for each(ToolStripMenuItem^ item in pluginMenuItems){
 				if (item->Text == "Delete Plugin ...")
 				{
 					deletePluginMenu = item;
@@ -70,19 +65,18 @@ namespace MyDll {
 			{
 				ToolStripMenuItem ^item = gcnew ToolStripMenuItem();
 				item->Text = "Delete Plugin ...";
-				optionMenuItems->Add(item);
+				pluginMenuItems->Add(item);
 				deletePluginMenu = item;
 			}
 
-			auto items = pluginsMenu->DropDownItems;
-			for each(ToolStripMenuItem^ item in items)
+			for each(ToolStripMenuItem^ item in pluginMenuItems)
 				if (item->Text == name)
 					return;
 
 			ToolStripMenuItem^ newPlugin = gcnew ToolStripMenuItem();
 			newPlugin->Text = name;
 			newPlugin->Click += gcnew System::EventHandler(this, &MyDll::ZipPlugin::Launch);
-			pluginsMenu->DropDownItems->Add(newPlugin);
+			pluginMenuItems->Add(newPlugin);
 			ToolStripMenuItem^ deletePlugin = gcnew ToolStripMenuItem();
 			deletePlugin->Text = name;
 			deletePlugin->Click += gcnew System::EventHandler(this, &MyDll::ZipPlugin::UnLoad);
@@ -101,11 +95,11 @@ namespace MyDll {
 
 		virtual void UnLoad(Object^ e, EventArgs^ arg)
 		{
-			for each(ToolStripMenuItem ^item in pluginsMenu->DropDownItems)
+			for each(ToolStripMenuItem ^item in pluginMenuItems)
 			{
 				if (item->Text == name)
 				{
-					pluginsMenu->DropDownItems->Remove(item);
+					pluginMenuItems->Remove(item);
 					break;
 				}
 			}
@@ -115,7 +109,7 @@ namespace MyDll {
 				{
 					deletePluginMenu->DropDownItems->Remove(item);
 					if (deletePluginMenu->DropDownItems->Count == 0)
-						optionMenuItems->Remove(deletePluginMenu);
+						pluginMenuItems->Remove(deletePluginMenu);
 					break;
 				}
 			}

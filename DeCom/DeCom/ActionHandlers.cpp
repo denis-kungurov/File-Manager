@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "Classes.h"
 #include "ProcessingFrom.h"
+#include "Form1.h"
 
 namespace DeCom 
 {
@@ -241,5 +242,6 @@ namespace DeCom
 			MessageBox::Show(obj->Message);
 		}
 	}
+
 
 }

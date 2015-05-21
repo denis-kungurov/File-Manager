@@ -20,7 +20,7 @@ namespace DeCom
 		ListView^ MyList2;
 		TextBox^ textBox1;
 		TextBox^ textBox2;
-		ToolStripMenuItem^ optionsToolStripMenuItem;
+		ToolStripMenuItem^ pluginsToolStripMenuItem;
 		ContextMenuStrip^ contextMenuStrip1;
 		ContextMenuStrip^ contextMenuStrip2;
 	public:
@@ -41,6 +41,7 @@ namespace DeCom
         static void RenderFileList(ListView^ listView, TextBox^ tb, String^ defaultPath = "C:/");
         static void Determine_Size(ListView^ MyList1,ListView^ MyList2, TextBox^ textBox1, TextBox^ textBox2);
 		static String^ OpenDll(ObjectToPlugin ^object);
+
     };
 	static class SupportFunctions{
     public:

@@ -75,10 +75,11 @@ namespace DeCom {
 	private: System::Windows::Forms::ToolStripMenuItem^  updateToolStripMenuItem;
 	private: System::Windows::Forms::ContextMenuStrip^  contextMenuStrip2;
 	private: System::Windows::Forms::ToolStripMenuItem^  updateToolStripMenuItem1;
-	private: System::Windows::Forms::ToolStripMenuItem^  loadPluginToolStripMenuItem1;
+
 	private: System::Windows::Forms::ToolStripMenuItem^  exitToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  bookmarksToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  addBookmarksToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  loadPluginToolStripMenuItem;
 
 
 
@@ -120,14 +121,14 @@ namespace DeCom {
 			this->programToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->exitToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->optionsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->bookmarksToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->addBookmarksToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->pluginsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->loadPluginToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->contextMenuStrip1 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->updateToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->contextMenuStrip2 = (gcnew System::Windows::Forms::ContextMenuStrip(this->components));
 			this->updateToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->bookmarksToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->addBookmarksToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->loadPluginToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainer1))->BeginInit();
 			this->splitContainer1->Panel1->SuspendLayout();
 			this->splitContainer1->Panel2->SuspendLayout();
@@ -357,26 +358,34 @@ namespace DeCom {
 			// 
 			// optionsToolStripMenuItem
 			// 
-			this->optionsToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+			this->optionsToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
 				this->bookmarksToolStripMenuItem,
-					this->pluginsToolStripMenuItem, this->loadPluginToolStripMenuItem1
+					this->pluginsToolStripMenuItem
 			});
 			this->optionsToolStripMenuItem->Name = L"optionsToolStripMenuItem";
 			this->optionsToolStripMenuItem->Size = System::Drawing::Size(61, 20);
 			this->optionsToolStripMenuItem->Text = L"Options";
 			// 
+			// bookmarksToolStripMenuItem
+			// 
+			this->bookmarksToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->addBookmarksToolStripMenuItem });
+			this->bookmarksToolStripMenuItem->Name = L"bookmarksToolStripMenuItem";
+			this->bookmarksToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->bookmarksToolStripMenuItem->Text = L"Bookmarks";
+			// 
+			// addBookmarksToolStripMenuItem
+			// 
+			this->addBookmarksToolStripMenuItem->Name = L"addBookmarksToolStripMenuItem";
+			this->addBookmarksToolStripMenuItem->Size = System::Drawing::Size(167, 22);
+			this->addBookmarksToolStripMenuItem->Text = L"Add bookmarks...";
+			this->addBookmarksToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::addBookmarksToolStripMenuItem_Click);
+			// 
 			// pluginsToolStripMenuItem
 			// 
+			this->pluginsToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->loadPluginToolStripMenuItem });
 			this->pluginsToolStripMenuItem->Name = L"pluginsToolStripMenuItem";
 			this->pluginsToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->pluginsToolStripMenuItem->Text = L"Plugins";
-			// 
-			// loadPluginToolStripMenuItem1
-			// 
-			this->loadPluginToolStripMenuItem1->Name = L"loadPluginToolStripMenuItem1";
-			this->loadPluginToolStripMenuItem1->Size = System::Drawing::Size(152, 22);
-			this->loadPluginToolStripMenuItem1->Text = L"Load Plugin ...";
-			this->loadPluginToolStripMenuItem1->Click += gcnew System::EventHandler(this, &Form1::loadPluginToolStripMenuItem_Click);
 			// 
 			// contextMenuStrip1
 			// 
@@ -404,19 +413,12 @@ namespace DeCom {
 			this->updateToolStripMenuItem1->Text = L"Update";
 			this->updateToolStripMenuItem1->Click += gcnew System::EventHandler(this, &Form1::updateToolStripMenuItemLeft_Click);
 			// 
-			// bookmarksToolStripMenuItem
+			// loadPluginToolStripMenuItem
 			// 
-			this->bookmarksToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->addBookmarksToolStripMenuItem });
-			this->bookmarksToolStripMenuItem->Name = L"bookmarksToolStripMenuItem";
-			this->bookmarksToolStripMenuItem->Size = System::Drawing::Size(152, 22);
-			this->bookmarksToolStripMenuItem->Text = L"Bookmarks";
-			// 
-			// addBookmarksToolStripMenuItem
-			// 
-			this->addBookmarksToolStripMenuItem->Name = L"addBookmarksToolStripMenuItem";
-			this->addBookmarksToolStripMenuItem->Size = System::Drawing::Size(167, 22);
-			this->addBookmarksToolStripMenuItem->Text = L"Add bookmarks...";
-			this->addBookmarksToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::addBookmarksToolStripMenuItem_Click);
+			this->loadPluginToolStripMenuItem->Name = L"loadPluginToolStripMenuItem";
+			this->loadPluginToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->loadPluginToolStripMenuItem->Text = L"Load Plugin...";
+			this->loadPluginToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::loadPluginToolStripMenuItem_Click);
 			// 
 			// Form1
 			// 
@@ -459,18 +461,31 @@ namespace DeCom {
         //Обработка события загрузки формы
     private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e)   
              {
-                 RenderActions::RenderFileList(MyList1,textBox1);         //Вызов метода заполнения MyList1, MyList2
+				 FileStream^ file = File::Open(Directory::GetCurrentDirectory() + "\\" + "Plugins.txt", FileMode::OpenOrCreate);
+				 file->Close();
+				 file = File::Open(Directory::GetCurrentDirectory() + "\\" + "Bookmarks.txt", FileMode::OpenOrCreate);
+				 file->Close();
+                 RenderActions::RenderFileList(MyList1,textBox1);         //Вызов метода заполнения MyList
                  RenderActions::RenderFileList(MyList2,textBox2);         //списком файлов и папок
 				 auto pluginsPathes = File::ReadAllLines(Directory::GetCurrentDirectory() + "\\" + "Plugins.txt");
 				 List<String^>^ pluginsList = gcnew List<String^>(pluginsPathes);
+				 auto bookmarks = File::ReadAllLines(Directory::GetCurrentDirectory() + "\\" + "Bookmarks.txt");
+				 List<String^>^ bookmarksList = gcnew List<String^>(bookmarks);
 				 
 				 for each(String^ path in pluginsList)
 				 {
 					 if ((String::IsNullOrEmpty(path) || String::IsNullOrWhiteSpace(path)) == false)
 					 {
 						 path = path->Remove(0, path->IndexOf(":") + 1);
-						 ObjectToPlugin^ object = gcnew ObjectToPlugin(MyList1, MyList2, textBox1, textBox2, optionsToolStripMenuItem, contextMenuStrip1, contextMenuStrip2, path);
+						 ObjectToPlugin^ object = gcnew ObjectToPlugin(MyList1, MyList2, textBox1, textBox2, pluginsToolStripMenuItem, contextMenuStrip1, contextMenuStrip2, path);
 						 RenderActions::OpenDll(object);
+					 }
+				 }
+				 for each(String^ item in bookmarksList)
+				 {
+					 if ((String::IsNullOrEmpty(item) || String::IsNullOrWhiteSpace(item)) == false)
+					 {
+						 AddBookmark(item);
 					 }
 				 }
              }
@@ -624,7 +639,7 @@ namespace DeCom {
 		try
 		{
 			OpenFileDialog^ openFile = gcnew OpenFileDialog();
-			openFile->Title = "Выберите файлы, которые необходимо заархивировать";
+			openFile->Title = "Выберите файл плагина";
 
 			if (openFile->ShowDialog() == ::DialogResult::OK)
 			{
@@ -632,9 +647,9 @@ namespace DeCom {
 			}
 			else return;
 		}
-		catch (Exception^ ex) { MessageBox::Show("Ошибка во время выбора файлов для архивации, попробуйте еще раз! " + ex->Message, "Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Error); }
+		catch (Exception^ ex) { MessageBox::Show("Ошибка во время выбора файла плагина, попробуйте еще раз! " + ex->Message, "Ошибка", MessageBoxButtons::OK, MessageBoxIcon::Error); }
 		
-		ObjectToPlugin^ object = gcnew ObjectToPlugin(MyList1, MyList2, textBox1, textBox2, optionsToolStripMenuItem, contextMenuStrip1, contextMenuStrip2, AboutLibName);
+		ObjectToPlugin^ object = gcnew ObjectToPlugin(MyList1, MyList2, textBox1, textBox2, pluginsToolStripMenuItem, contextMenuStrip1, contextMenuStrip2, AboutLibName);
 
 		String ^name = RenderActions::OpenDll(object);
 		auto sw = gcnew StreamWriter(Directory::GetCurrentDirectory() + "\\" + "Plugins.txt", true);
@@ -668,17 +683,21 @@ namespace DeCom {
 	private: System::Void addBookmarksToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 		FolderBrowserDialog^ fbd = gcnew FolderBrowserDialog();
 		fbd->ShowDialog();                      //Отображение окна выбора директории
-		
-		
 
 		String^ path = fbd->SelectedPath;         //получение выбранного пути
 		if (path != String::Empty)               //проверка на пустоту выбранного пути (выбран ли он)
 		{
-			ToolStripMenuItem^ newBookmark = gcnew ToolStripMenuItem();
-			newBookmark->Text = Path::GetFileName(path);
-			newBookmark->Tag = path;
-			newBookmark->Click += gcnew EventHandler(this, &Form1::RenderListView);
-			bookmarksToolStripMenuItem->DropDownItems->Add(newBookmark);
+			for each(ToolStripMenuItem ^item in bookmarksToolStripMenuItem->DropDownItems)
+			{
+				if (item->Tag == path)
+				{
+					return;
+				}
+			}
+			auto sw = gcnew StreamWriter(Directory::GetCurrentDirectory() + "\\" + "Bookmarks.txt", true);
+			sw->WriteLine(path);
+			sw->Close();
+			AddBookmark(path);
 		}
 	}
 
@@ -695,6 +714,69 @@ namespace DeCom {
 			else
 				RenderActions::RenderFileList(MyList2, textBox2, path);
 		}
+	}
+	private: System::Void AddBookmark(String ^path)
+	{
+		ToolStripMenuItem^ newBookmark = gcnew ToolStripMenuItem();
+		newBookmark->Text = Path::GetFileName(path);
+		newBookmark->Tag = path;
+		newBookmark->Click += gcnew EventHandler(this, &Form1::RenderListView);
+		ToolStripMenuItem^ deleteBookmark = gcnew ToolStripMenuItem();
+		deleteBookmark->Text = Path::GetFileName(path);
+		deleteBookmark->Tag = path;
+		deleteBookmark->Click += gcnew EventHandler(this, &Form1::DeleteBookmark);
+		if (bookmarksToolStripMenuItem->DropDownItems->Count == 1)
+		{
+			ToolStripMenuItem ^deleteBookmarks = gcnew ToolStripMenuItem();
+			deleteBookmarks->Text = "Delete Bookmark";
+			bookmarksToolStripMenuItem->DropDownItems->Add(deleteBookmarks);
+		}
+		bookmarksToolStripMenuItem->DropDownItems->Add(newBookmark);
+		for each(ToolStripMenuItem ^item in bookmarksToolStripMenuItem->DropDownItems)
+		{
+			if (item->Text == "Delete Bookmark")
+			{
+				item->DropDownItems->Add(deleteBookmark);
+				break;
+			}
+		}
+	}
+
+	private: System::Void DeleteBookmark(System::Object^  sender, EventArgs^  e)
+	{
+		String^ path = (String^)((ToolStripMenuItem^)sender)->Tag;
+		for each(ToolStripMenuItem ^item in bookmarksToolStripMenuItem->DropDownItems)
+		{
+			if (item->Tag == path)
+			{
+				bookmarksToolStripMenuItem->DropDownItems->Remove(item);
+				break;
+			}
+		}
+		for each(ToolStripMenuItem ^items in bookmarksToolStripMenuItem->DropDownItems)
+		{
+			if (items->Text == "Delete Bookmark")
+			{
+				for each(ToolStripMenuItem ^item in items->DropDownItems)
+				{
+					if (item->Tag == path)
+					{
+						items->DropDownItems->Remove(item);
+						break;
+					}
+				}
+				if (items->DropDownItems->Count == 0)
+					bookmarksToolStripMenuItem->DropDownItems->Remove(items);
+				break;
+			}
+		}
+		auto sr = gcnew StreamReader(Directory::GetCurrentDirectory() + "\\" + "Bookmarks.txt");
+		String ^str = sr->ReadToEnd();
+		str = str->Replace(path + "\r\n", "");
+		sr->Close();
+		auto sw = gcnew StreamWriter(Directory::GetCurrentDirectory() + "\\" + "Bookmarks.txt", false);
+		sw->Write(str);
+		sw->Close();
 	}
 };
 }
