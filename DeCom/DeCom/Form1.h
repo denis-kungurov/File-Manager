@@ -622,6 +622,43 @@ namespace DeCom {
 					 t1->IsBackground = true;
                      t1->Start();//вызов метода установки размера
                  }
+				 else if (e->KeyData == Keys::Back)
+				 {
+					 ListView^ MyList;
+					 TextBox^ textBox;
+					 if (MyList1->SelectedItems->Count > 0){
+						 MyList = MyList1;
+						 textBox = textBox1;
+					 }
+					 else
+					 {
+						 MyList = MyList2;
+						 textBox = textBox2;
+					 }
+					 DirectoryInfo^ dir = gcnew DirectoryInfo(textBox->Text);   //получения данных о директории
+					 textBox->Clear();
+					 if (dir->Parent)                                      //если есть родитель
+					 {
+						 String^ path = dir->Parent->FullName;              //получение пути к родителю
+						 textBox->Text = path;
+						 RenderActions::RenderFileList(MyList, textBox, textBox->Text);  //перерисовка listView для предыдущей директории
+					 }
+					 else                                                  //если нет родителя
+					 {
+						 textBox->Text = dir->FullName;
+					 }
+				 }
+				 else if (e->KeyData == Keys::Enter)
+				 {
+					 if (MyList1->SelectedItems->Count > 0){
+						 ActionHandlers::DoubleClick_Action(MyList1, textBox1);           //вызов метода обработки данного события
+					 }
+					 else
+					 {
+						 if (MyList2->SelectedItems->Count < 0) return;
+						 ActionHandlers::DoubleClick_Action(MyList2, textBox2);           //вызов метода обработки данного события
+					 }
+				 }
                  /*System::Action ^ action = gcnew Action(this, &Form1::Set_Size);
 
                  Thread^ mainT = Thread::CurrentThread;
