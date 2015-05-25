@@ -560,7 +560,7 @@ namespace DeCom {
 				 else
 				 {
 					 if (MyList2->SelectedItems->Count < 0) return;
-					 procForm->SetFormParams("Copying...", "Deleting " + getActiveItemName() + " from " + textBox2->Text);
+					 procForm->SetFormParams("Deleting...", "Deleting " + getActiveItemName() + " from " + textBox2->Text);
 				 }
 				 procForm->Visible = true;
 				 Thread^ t1 = gcnew Thread(gcnew ThreadStart(this, &DeCom::Form1::doDelete));
